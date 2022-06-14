@@ -8,6 +8,8 @@ import Chip from "./components/Chip/Chip";
 import NutritionalLabel from "./components/NutritionalLabel/NutritionalLabel";
 import { nutritionFacts } from "./constants";
 import CategoryColumn from "./components/CategoryColumn/CategoryColumn";
+import RestaurantsRow from "./components/RestaurantsRow/RestaurantsRow";
+import MenuDisplay from "./components/RestaurantsRow/RestaurantsRow";
 
 // don't move this!
 export const appInfo = {
@@ -53,28 +55,11 @@ export function App() {
   return (
     <main className="App">
       {/* CATEGORIES COLUMN */}
-      <div className="CategoriesColumn col">
-        <div className="categories options">
-          <h2 className="title">Categories</h2>
-          {/* map over the catergories array and create a p tag for every item */}
-          {categories.map((category, idx) => (
-            <Chip 
-              key={category.name} 
-              label ={category}
-              isActive={category === currCategory}
-              
-              onClick={() => {
-                setCurrCategory(category);
-                // console.log(currCategory);
-              }}
-              onClose={() => {
-                setCurrCategory(null);
-              }} 
-              />
-            
-          ))}
-        </div>
-      </div>
+      <CategoryColumn
+        categories={categories}
+        currCategory={currCategory}
+        setCurrCategory={setCurrCategory}
+      />
 
       {/* MAIN COLUMN */}
       <div className="container">
@@ -86,25 +71,11 @@ export function App() {
           dataSource = {appInfo.dataSource}
         />
         {/* RESTAURANTS ROW */}
-        <div className="RestaurantsRow">
-          <h2 className="title">Restaurants</h2>
-          <div className="restaurants options">
-            {restaurants.map((restaurant, idx) => (
-              <Chip 
-                key={restaurant.name}
-                label={restaurant}
-                isActive={restaurant === currRestaurant}
-                onClick={() => {
-                  setCurrRestaurant(restaurant);
-                }}
-                onClose={() => {
-                  setCurrRestaurant(null);
-                }}
-                
-                />
-            ))}
-          </div>
-        </div>
+        <RestaurantsRow
+          restaurants={restaurants}
+          currRestaurant={currRestaurant}
+          setCurrRestaurant={setCurrRestaurant}
+        />
 
         {/* INSTRUCTIONS GO HERE */}
         <Instructions

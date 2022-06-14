@@ -1,0 +1,15 @@
+.CategoryColumn .col {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 40px 0px;
+    min-width: 300px;
+    width: 400px;
+    max-width: 400px;
+  }
+
+.CategoryColumn h2.title {
+    font-size: 2.4rem;
+    font-weight: bold;
+    border-bottom: solid 8px black;
+    margin-bottom: 1rem;
+}
