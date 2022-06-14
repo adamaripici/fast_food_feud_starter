@@ -6,6 +6,8 @@ import "./App.css"
 import Instructions from "./components/Instructions/Instructions";
 import Chip from "./components/Chip/Chip";
 import NutritionalLabel from "./components/NutritionalLabel/NutritionalLabel";
+import { nutritionFacts } from "./constants";
+import CategoryColumn from "./components/CategoryColumn/CategoryColumn";
 
 // don't move this!
 export const appInfo = {
@@ -24,14 +26,30 @@ export const appInfo = {
 // or this!
 const { data, categories, restaurants } = createDataSet()
 
+
+
 export function App() {
 
   const [currCategory, setCurrCategory] = React.useState(0);
   const [currRestaurant, setCurrRestaurant] = React.useState(0);
+  const [selectedMenuItem, setSelectedMenuItem] = React.useState(0);
   const currentMenuItems = data.filter((item) => {
     return item.food_category === currCategory && item.restaurant === currRestaurant
   })
 
+  const message = () => {
+    if (currCategory === 0 && currRestaurant === 0) {
+      return appInfo.instructions.start;
+    } else if (currCategory != 0 && currRestaurant === 0) {
+      return appInfo.instructions.onlyCategory;
+    } else if (currCategory === 0 && currRestaurant != 0) {
+      return appInfo.instructions.onlyRestaurant;
+    } else if (currRestaurant != 0 && currCategory != 0 && selectedMenuItem === 0) {
+      return appInfo.instructions.noSelectedItem;
+    } else if (currRestaurant != 0 && currCategory != 0 && selectedMenuItem != 0) {
+      return appInfo.instructions.allSelected;
+    }
+  }
   return (
     <main className="App">
       {/* CATEGORIES COLUMN */}
@@ -41,12 +59,18 @@ export function App() {
           {/* map over the catergories array and create a p tag for every item */}
           {categories.map((category, idx) => (
             <Chip 
-              key={category} 
+              key={category.name} 
               label ={category}
               isActive={category === currCategory}
+              
               onClick={() => {
                 setCurrCategory(category);
-              }} />
+                // console.log(currCategory);
+              }}
+              onClose={() => {
+                setCurrCategory(null);
+              }} 
+              />
             
           ))}
         </div>
@@ -67,19 +91,24 @@ export function App() {
           <div className="restaurants options">
             {restaurants.map((restaurant, idx) => (
               <Chip 
-                key={restaurant}
+                key={restaurant.name}
                 label={restaurant}
                 isActive={restaurant === currRestaurant}
                 onClick={() => {
                   setCurrRestaurant(restaurant);
-                }} />
+                }}
+                onClose={() => {
+                  setCurrRestaurant(null);
+                }}
+                
+                />
             ))}
           </div>
         </div>
 
         {/* INSTRUCTIONS GO HERE */}
         <Instructions
-          instructions = {appInfo.instructions.start}
+          instructions = {message()}
         />
         {/* MENU DISPLAY */}
         <div className="MenuDisplay display">
@@ -87,13 +116,26 @@ export function App() {
             <h2 className="title">Menu Items</h2>
             {/* YOUR CODE HERE */}
             {currentMenuItems.map((item,idx) => (
-              <Chip key={idx} label = {item.item_name}> 
+              <Chip key={item.name} label = {item.item_name}
+              isActive={item === selectedMenuItem}
+              onClick={() => {
+                setSelectedMenuItem(item);
+              }}
+              onClose={() => {
+                setSelectedMenuItem(null);
+              }}
+              > 
               </Chip>
             ))}
           </div>
 
           {/* NUTRITION FACTS */}
-          <div className="NutritionFacts nutrition-facts">{/* YOUR CODE HERE */}</div>
+          <div className="NutritionFacts nutrition-facts">
+            { selectedMenuItem ? 
+            <NutritionalLabel item ={selectedMenuItem} />
+            : null}
+            
+          </div>
         </div>
 
         <div className="data-sources">
